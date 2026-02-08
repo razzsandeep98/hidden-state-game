@@ -9,15 +9,17 @@
 body{
   background: radial-gradient(circle at 30% 20%, #1a0f3a, #000000 60%);
 }
-@keyframes glowFloat{
+
+@keyframes floatGlow {
   0%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
+  50%{transform:translateY(-10px)}
   100%{transform:translateY(0)}
 }
 .glow{
-  box-shadow:0 0 25px rgba(147,51,234,.6);
-  animation: glowFloat 3s ease-in-out infinite;
+  box-shadow:0 0 30px rgba(147,51,234,.6);
+  animation: floatGlow 3s ease-in-out infinite;
 }
+
 @keyframes shuffle{
   0%{transform:rotateY(0)}
   50%{transform:rotateY(180deg)}
@@ -31,19 +33,33 @@ body{
 
 <body class="text-white min-h-screen">
 
+<!-- NAV -->
+<div class="flex justify-between px-8 py-6 text-sm text-gray-300">
+  <h1 class="font-semibold tracking-widest">ENCRYPTED ARENA</h1>
+  <p>Solana + Arcium</p>
+</div>
+
 <!-- HERO -->
 <div class="text-center mt-20 px-4">
-  <h1 class="text-5xl font-bold">Encrypted Card Arena</h1>
-  <p class="text-gray-400 mt-3">
-    Hidden-state duel powered by encrypted compute.
+  <h2 class="text-6xl font-bold leading-tight">
+    Encrypt Everything<br>Play Fair
+  </h2>
+  <p class="text-gray-400 mt-6 max-w-xl mx-auto">
+    Hidden-state onchain card duel powered by encrypted compute.
+    Cards remain private until reveal phase.
   </p>
+
+  <button onclick="scrollToGame()"
+    class="mt-8 bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg glow">
+    Enter Arena
+  </button>
 </div>
 
 <!-- GAME -->
-<div class="mt-16 flex flex-col items-center">
+<div id="game" class="mt-40 flex flex-col items-center">
 
-<h3 class="text-2xl mb-2">Secret Card Duel</h3>
-<p class="text-gray-400 mb-6">Shuffle → Reveal → Next Round</p>
+<h3 class="text-3xl font-semibold mb-4">Secret Card Duel</h3>
+<p class="text-gray-400 mb-8">Shuffle → Draw → Reveal</p>
 
 <div id="card"
   class="w-40 h-56 bg-purple-700 rounded-2xl flex items-center justify-center text-4xl font-bold glow">
@@ -59,13 +75,22 @@ Start
 Shuffle
 </button>
 
-<button id="revealBtn" onclick="revealCard()" class="bg-green-600 px-5 py-2 rounded">
+<button onclick="revealCard()" class="bg-green-600 px-5 py-2 rounded">
 Reveal
 </button>
 </div>
 
-<p id="status" class="mt-6 text-gray-300 text-center">Waiting...</p>
+<p id="status" class="mt-6 text-gray-400">Waiting...</p>
 
+</div>
+
+<!-- INFO -->
+<div class="mt-32 max-w-3xl mx-auto text-gray-300 text-sm text-center space-y-2 px-4">
+<p><b>Innovation:</b> Hidden encrypted cards onchain.</p>
+<p><b>Technical:</b> Arcium encrypted compute + Solana logic concept.</p>
+<p><b>UX:</b> Smooth shuffle animation + 3-step flow.</p>
+<p><b>Impact:</b> Multiplayer games, auctions, private voting.</p>
+<p><b>Clarity:</b> Reveal phase prevents cheating.</p>
 </div>
 
 <script>
