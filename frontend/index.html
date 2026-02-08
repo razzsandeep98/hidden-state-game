@@ -2,96 +2,145 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Secret Card Shuffle Duel</title>
+<title>Encrypted Card Arena</title>
 <script src="https://cdn.tailwindcss.com"></script>
+
 <style>
-@keyframes shuffle {
-  0% { transform: rotateY(0deg); }
-  50% { transform: rotateY(180deg); }
-  100% { transform: rotateY(360deg); }
+body{
+  background: radial-gradient(circle at 30% 20%, #1a0f3a, #000000 60%);
 }
-.shuffle {
+
+@keyframes floatGlow {
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+  100%{transform:translateY(0)}
+}
+.glow{
+  box-shadow:0 0 30px rgba(147,51,234,.6);
+  animation: floatGlow 3s ease-in-out infinite;
+}
+
+@keyframes shuffle{
+  0%{transform:rotateY(0)}
+  50%{transform:rotateY(180deg)}
+  100%{transform:rotateY(360deg)}
+}
+.shuffle{
   animation: shuffle 1s linear infinite;
 }
 </style>
 </head>
 
-<body class="bg-black text-white min-h-screen flex flex-col items-center">
+<body class="text-white min-h-screen">
 
-<h1 class="text-4xl font-bold mt-8">Secret Card Shuffle Duel</h1>
-<p class="text-gray-400 mt-2 text-center max-w-xl">
-Draw a hidden encrypted card. Cards stay private until reveal phase.
-Powered by Arcium encrypted compute.
-</p>
-
-<!-- CARD AREA -->
-<div class="mt-10">
-  <div id="card"
-    class="w-32 h-44 bg-purple-700 rounded-xl flex items-center justify-center text-3xl font-bold">
-    ?
-  </div>
+<!-- NAV -->
+<div class="flex justify-between px-8 py-6 text-sm text-gray-300">
+  <h1 class="font-semibold tracking-widest">ENCRYPTED ARENA</h1>
+  <p>Solana + Arcium</p>
 </div>
 
-<!-- BUTTONS -->
-<div class="mt-6 flex gap-3">
-  <button onclick="startGame()"
-    class="bg-purple-600 px-4 py-2 rounded">
-    Start Game
-  </button>
+<!-- HERO -->
+<div class="text-center mt-20 px-4">
+  <h2 class="text-6xl font-bold leading-tight">
+    Encrypt Everything<br>Play Fair
+  </h2>
+  <p class="text-gray-400 mt-6 max-w-xl mx-auto">
+    Hidden-state onchain card duel powered by encrypted compute.
+    Cards remain private until reveal phase.
+  </p>
 
-  <button onclick="drawCard()"
-    class="bg-blue-600 px-4 py-2 rounded">
-    Shuffle & Draw
-  </button>
-
-  <button onclick="revealCard()"
-    class="bg-green-600 px-4 py-2 rounded">
-    Reveal
+  <button onclick="scrollToGame()"
+    class="mt-8 bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg glow">
+    Enter Arena
   </button>
 </div>
 
-<p id="status" class="mt-4 text-gray-400">Waiting...</p>
+<!-- GAME -->
+<div id="game" class="mt-40 flex flex-col items-center">
 
-<!-- INFO SECTION -->
-<div class="mt-16 max-w-2xl text-gray-300 text-sm space-y-2 text-center">
-  <p><b>Innovation:</b> Fully hidden onchain card state using encrypted compute.</p>
-  <p><b>Technical:</b> Arcium encryption + Solana integration concept.</p>
-  <p><b>UX:</b> Shuffle animation + simple 3-step flow.</p>
-  <p><b>Impact:</b> Card games, auctions, secret voting, strategy gaming.</p>
-  <p><b>Clarity:</b> Reveal phase ensures fairness and anti-cheat logic.</p>
+<h3 class="text-3xl font-semibold mb-4">Secret Card Duel</h3>
+<p class="text-gray-400 mb-8">Shuffle → Draw → Reveal</p>
+
+<div id="card"
+  class="w-40 h-56 bg-purple-700 rounded-2xl flex items-center justify-center text-4xl font-bold glow">
+  ?
+</div>
+
+<div class="flex gap-4 mt-8">
+<button onclick="startGame()" class="bg-purple-600 px-5 py-2 rounded">
+Start
+</button>
+
+<button onclick="drawCard()" class="bg-blue-600 px-5 py-2 rounded">
+Shuffle
+</button>
+
+<button onclick="revealCard()" class="bg-green-600 px-5 py-2 rounded">
+Reveal
+</button>
+</div>
+
+<p id="status" class="mt-6 text-gray-400">Waiting...</p>
+
+</div>
+
+<!-- INFO -->
+<div class="mt-32 max-w-3xl mx-auto text-gray-300 text-sm text-center space-y-2 px-4">
+<p><b>Innovation:</b> Hidden encrypted cards onchain.</p>
+<p><b>Technical:</b> Arcium encrypted compute + Solana logic concept.</p>
+<p><b>UX:</b> Smooth shuffle animation + 3-step flow.</p>
+<p><b>Impact:</b> Multiplayer games, auctions, private voting.</p>
+<p><b>Clarity:</b> Reveal phase prevents cheating.</p>
 </div>
 
 <script>
-let started = false;
-let cardValue = null;
-const card = document.getElementById("card");
+let started=false;
+let playerCard=null;
+let botCard=null;
+let playerScore=0;
+let botScore=0;
+
+const card=document.getElementById("card");
 
 function startGame(){
-  started = true;
-  card.innerText = "?";
-  document.getElementById("status").innerText = "Game Started • State Encrypted";
+  started=true;
+  playerCard=null;
+  botCard=null;
+  document.getElementById("status").innerText="Round Started";
 }
 
 function drawCard(){
-  if(!started){ alert("Start game first"); return; }
+  if(!started){alert("Start first");return;}
 
   card.classList.add("shuffle");
-  document.getElementById("status").innerText = "Shuffling Encrypted Cards...";
+  document.getElementById("status").innerText="Shuffling Encrypted Cards...";
 
-  setTimeout(() => {
+  setTimeout(()=>{
     card.classList.remove("shuffle");
-    cardValue = Math.floor(Math.random()*13)+1;
-    card.innerText = "🔒";
-    document.getElementById("status").innerText = "Encrypted Card Stored";
-  }, 1500);
+    playerCard=Math.floor(Math.random()*13)+1;
+    botCard=Math.floor(Math.random()*13)+1;
+    card.innerText="🔒";
+    document.getElementById("status").innerText="Cards Encrypted";
+  },1200);
 }
 
 function revealCard(){
-  if(!cardValue){ alert("Draw card first"); return; }
-  card.innerText = cardValue;
-  document.getElementById("status").innerText = "Reveal Complete • Fair State";
+  if(!playerCard){alert("Shuffle first");return;}
+
+  let result="";
+  if(playerCard>botCard){
+    playerScore++;
+    result="You Win!";
+  }else if(botCard>playerCard){
+    botScore++;
+    result="Bot Wins!";
+  }else{
+    result="Draw!";
+  }
+
+  card.innerText=playerCard;
+  document.getElementById("status").innerText=
+    result+" | Your:"+playerCard+" Bot:"+botCard+
+    " | Score "+playerScore+"-"+botScore;
 }
 </script>
-
-</body>
-</html>
