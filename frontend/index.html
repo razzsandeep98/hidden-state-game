@@ -2,87 +2,78 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Encrypted Game Portal</title>
+<title>Secret Number Battle</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white min-h-screen">
+<body class="bg-black text-white min-h-screen flex flex-col items-center">
 
-<!-- NAVBAR -->
-<div class="flex justify-between items-center px-8 py-6">
-  <h1 class="text-xl font-semibold tracking-widest">HIDDEN PORTAL</h1>
-  <p class="text-gray-500 text-sm">Solana + Arcium</p>
-</div>
+<h1 class="text-4xl font-bold mt-10">Secret Number Battle</h1>
+<p class="text-gray-400 mt-2">Guess the hidden encrypted number (1–10)</p>
 
-<!-- HERO -->
-<div class="flex flex-col items-center text-center mt-20 px-4">
-  <h2 class="text-5xl md:text-6xl font-bold leading-tight">
-    Encrypt Everything <br>
-    Compute Privately
-  </h2>
+<div class="bg-gray-900 p-8 rounded-xl mt-10 w-80 text-center border border-gray-700">
 
-  <p class="text-gray-400 mt-6 max-w-xl">
-    A hidden-state onchain gaming portal powered by encrypted compute.
-    Player actions remain private until reveal phase.
-    </p>
-  
-  </p> class="text-gray-400 mt-4">
-Secret Card Duel — Each player draws a hidden encrypted card.
-Highest card wins after reveal phase.
-</p>
+<button onclick="startGame()"
+class="bg-purple-600 px-4 py-2 rounded w-full mb-4">
+Start Game
+</button>
 
+<input id="guessInput" type="number" min="1" max="10"
+class="w-full p-2 rounded bg-gray-800 text-white mb-3"
+placeholder="Enter number 1-10">
 
-  <div class="flex gap-4 mt-8">
-    <button onclick="startSession()"
-      class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg">
-      Start Game
-    </button>
+<button onclick="submitGuess()"
+class="bg-blue-600 px-4 py-2 rounded w-full mb-3">
+Submit Guess
+</button>
 
-    <button onclick="encryptMove()"
-      class="border border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-800">
-      Draw Secret Card
-    </button>
-  </div>
-</div>
+<button onclick="revealNumber()"
+class="bg-green-600 px-4 py-2 rounded w-full">
+Reveal Number
+</button>
 
-<!-- STATUS BOX -->
-<div class="mt-20 flex justify-center">
-  <div class="bg-gray-900 border border-gray-700 p-6 rounded-xl w-96 text-center">
-    <p class="text-gray-500 text-sm">Game Status</p>
-    <p id="status" class="mt-2 text-green-400">Idle</p>
+<p id="status" class="mt-4 text-gray-400">Waiting...</p>
 
-    <button onclick="revealMove()"
-      class="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg w-full">
-      Reveal Move
-    </button>
-  </div>
 </div>
 
 <script>
+let secret = null;
 let started = false;
-let card = null;
 
-function startSession(){
+function startGame(){
+  secret = Math.floor(Math.random()*10)+1;
   started = true;
-  document.getElementById("status").innerText = "Game Started";
+  document.getElementById("status").innerText = "Game Started • Number Encrypted";
 }
 
-function encryptMove(){
+function submitGuess(){
   if(!started){
     alert("Start game first");
     return;
   }
-  card = Math.floor(Math.random()*10)+1;
-  document.getElementById("status").innerText =
-    "Encrypted Card Stored";
-}
-
-function revealMove(){
-  if(!card){
-    alert("Draw card first");
+  const guess = document.getElementById("guessInput").value;
+  if(!guess){
+    alert("Enter number");
     return;
   }
-  document.getElementById("status").innerText =
-    "Reveal Complete • Your Card: " + card;
+  document.getElementById("status").innerText = "Guess Stored Privately";
+}
+
+function revealNumber(){
+  if(!started){
+    alert("Start game first");
+    return;
+  }
+  const guess = document.getElementById("guessInput").value;
+  if(guess == secret){
+    document.getElementById("status").innerText =
+      "You Win! Secret Number: " + secret;
+  } else {
+    document.getElementById("status").innerText =
+      "You Lose! Secret Number: " + secret;
+  }
 }
 </script>
+
+</body>
+</html>
