@@ -1,0 +1,7 @@
+{
+  "name": "hidden-state-game",
+  "version": "1.0.0",
+  "dependencies": {
+    "@arcium/sdk": "latest"
+  }
+}
