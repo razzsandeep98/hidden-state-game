@@ -94,53 +94,82 @@ Reveal
 </div>
 
 <script>
-let started=false;
-let playerCard=null;
-let botCard=null;
-let playerScore=0;
-let botScore=0;
+let started = false;
+let playerCard = null;
+let botCard = null;
+let roundFinished = false;
 
-const card=document.getElementById("card");
+let playerScore = 0;
+let botScore = 0;
+
+const card = document.getElementById("card");
+
+function scrollToGame(){
+  document.getElementById("game").scrollIntoView({behavior:"smooth"});
+}
 
 function startGame(){
-  started=true;
-  playerCard=null;
-  botCard=null;
-  document.getElementById("status").innerText="Round Started";
+  started = true;
+  roundFinished = false;
+  playerCard = null;
+  botCard = null;
+  card.innerText = "?";
+  document.getElementById("status").innerText = "Round Started";
 }
 
 function drawCard(){
-  if(!started){alert("Start first");return;}
+  if(!started){
+    alert("Start game first");
+    return;
+  }
+
+  if(roundFinished){
+    alert("Click Start for next round");
+    return;
+  }
 
   card.classList.add("shuffle");
-  document.getElementById("status").innerText="Shuffling Encrypted Cards...";
+  document.getElementById("status").innerText = "Shuffling Encrypted Cards...";
 
   setTimeout(()=>{
     card.classList.remove("shuffle");
-    playerCard=Math.floor(Math.random()*13)+1;
-    botCard=Math.floor(Math.random()*13)+1;
-    card.innerText="🔒";
-    document.getElementById("status").innerText="Cards Encrypted";
+    playerCard = Math.floor(Math.random()*13)+1;
+    botCard = Math.floor(Math.random()*13)+1;
+    card.innerText = "🔒";
+    document.getElementById("status").innerText = "Cards Encrypted";
   },1200);
 }
 
 function revealCard(){
-  if(!playerCard){alert("Shuffle first");return;}
-
-  let result="";
-  if(playerCard>botCard){
-    playerScore++;
-    result="You Win!";
-  }else if(botCard>playerCard){
-    botScore++;
-    result="Bot Wins!";
-  }else{
-    result="Draw!";
+  if(!playerCard){
+    alert("Shuffle first");
+    return;
   }
 
-  card.innerText=playerCard;
-  document.getElementById("status").innerText=
-    result+" | Your:"+playerCard+" Bot:"+botCard+
-    " | Score "+playerScore+"-"+botScore;
+  if(roundFinished){
+    alert("Round already finished");
+    return;
+  }
+
+  roundFinished = true;
+
+  let result = "";
+  if(playerCard > botCard){
+    playerScore++;
+    result = "You Win!";
+  } else if(botCard > playerCard){
+    botScore++;
+    result = "Bot Wins!";
+  } else {
+    result = "Draw!";
+  }
+
+  card.innerText = playerCard;
+
+  document.getElementById("status").innerText =
+    result + " | Your:" + playerCard +
+    " Bot:" + botCard +
+    " | Score " + playerScore + "-" + botScore +
+    " | Click Start for next round";
 }
 </script>
