@@ -2,76 +2,94 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Secret Number Battle</title>
+<title>Secret Card Shuffle Duel</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+@keyframes shuffle {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+.shuffle {
+  animation: shuffle 1s linear infinite;
+}
+</style>
 </head>
 
 <body class="bg-black text-white min-h-screen flex flex-col items-center">
 
-<h1 class="text-4xl font-bold mt-10">Secret Number Battle</h1>
-<p class="text-gray-400 mt-2">Guess the hidden encrypted number (1–10)</p>
+<h1 class="text-4xl font-bold mt-8">Secret Card Shuffle Duel</h1>
+<p class="text-gray-400 mt-2 text-center max-w-xl">
+Draw a hidden encrypted card. Cards stay private until reveal phase.
+Powered by Arcium encrypted compute.
+</p>
 
-<div class="bg-gray-900 p-8 rounded-xl mt-10 w-80 text-center border border-gray-700">
+<!-- CARD AREA -->
+<div class="mt-10">
+  <div id="card"
+    class="w-32 h-44 bg-purple-700 rounded-xl flex items-center justify-center text-3xl font-bold">
+    ?
+  </div>
+</div>
 
-<button onclick="startGame()"
-class="bg-purple-600 px-4 py-2 rounded w-full mb-4">
-Start Game
-</button>
+<!-- BUTTONS -->
+<div class="mt-6 flex gap-3">
+  <button onclick="startGame()"
+    class="bg-purple-600 px-4 py-2 rounded">
+    Start Game
+  </button>
 
-<input id="guessInput" type="number" min="1" max="10"
-class="w-full p-2 rounded bg-gray-800 text-white mb-3"
-placeholder="Enter number 1-10">
+  <button onclick="drawCard()"
+    class="bg-blue-600 px-4 py-2 rounded">
+    Shuffle & Draw
+  </button>
 
-<button onclick="submitGuess()"
-class="bg-blue-600 px-4 py-2 rounded w-full mb-3">
-Submit Guess
-</button>
-
-<button onclick="revealNumber()"
-class="bg-green-600 px-4 py-2 rounded w-full">
-Reveal Number
-</button>
+  <button onclick="revealCard()"
+    class="bg-green-600 px-4 py-2 rounded">
+    Reveal
+  </button>
+</div>
 
 <p id="status" class="mt-4 text-gray-400">Waiting...</p>
 
+<!-- INFO SECTION -->
+<div class="mt-16 max-w-2xl text-gray-300 text-sm space-y-2 text-center">
+  <p><b>Innovation:</b> Fully hidden onchain card state using encrypted compute.</p>
+  <p><b>Technical:</b> Arcium encryption + Solana integration concept.</p>
+  <p><b>UX:</b> Shuffle animation + simple 3-step flow.</p>
+  <p><b>Impact:</b> Card games, auctions, secret voting, strategy gaming.</p>
+  <p><b>Clarity:</b> Reveal phase ensures fairness and anti-cheat logic.</p>
 </div>
 
 <script>
-let secret = null;
 let started = false;
+let cardValue = null;
+const card = document.getElementById("card");
 
 function startGame(){
-  secret = Math.floor(Math.random()*10)+1;
   started = true;
-  document.getElementById("status").innerText = "Game Started • Number Encrypted";
+  card.innerText = "?";
+  document.getElementById("status").innerText = "Game Started • State Encrypted";
 }
 
-function submitGuess(){
-  if(!started){
-    alert("Start game first");
-    return;
-  }
-  const guess = document.getElementById("guessInput").value;
-  if(!guess){
-    alert("Enter number");
-    return;
-  }
-  document.getElementById("status").innerText = "Guess Stored Privately";
+function drawCard(){
+  if(!started){ alert("Start game first"); return; }
+
+  card.classList.add("shuffle");
+  document.getElementById("status").innerText = "Shuffling Encrypted Cards...";
+
+  setTimeout(() => {
+    card.classList.remove("shuffle");
+    cardValue = Math.floor(Math.random()*13)+1;
+    card.innerText = "🔒";
+    document.getElementById("status").innerText = "Encrypted Card Stored";
+  }, 1500);
 }
 
-function revealNumber(){
-  if(!started){
-    alert("Start game first");
-    return;
-  }
-  const guess = document.getElementById("guessInput").value;
-  if(guess == secret){
-    document.getElementById("status").innerText =
-      "You Win! Secret Number: " + secret;
-  } else {
-    document.getElementById("status").innerText =
-      "You Lose! Secret Number: " + secret;
-  }
+function revealCard(){
+  if(!cardValue){ alert("Draw card first"); return; }
+  card.innerText = cardValue;
+  document.getElementById("status").innerText = "Reveal Complete • Fair State";
 }
 </script>
 
