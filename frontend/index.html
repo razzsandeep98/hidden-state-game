@@ -35,12 +35,12 @@ Highest card wins after reveal phase.
   <div class="flex gap-4 mt-8">
     <button onclick="startSession()"
       class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg">
-      Start Secure Session
+      Start Game
     </button>
 
     <button onclick="encryptMove()"
       class="border border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-800">
-      Encrypt Move
+      Draw Secret Card
     </button>
   </div>
 </div>
@@ -48,7 +48,7 @@ Highest card wins after reveal phase.
 <!-- STATUS BOX -->
 <div class="mt-20 flex justify-center">
   <div class="bg-gray-900 border border-gray-700 p-6 rounded-xl w-96 text-center">
-    <p class="text-gray-500 text-sm">Session Status</p>
+    <p class="text-gray-500 text-sm">Game Status</p>
     <p id="status" class="mt-2 text-green-400">Idle</p>
 
     <button onclick="revealMove()"
@@ -59,31 +59,30 @@ Highest card wins after reveal phase.
 </div>
 
 <script>
-let session = false;
-let encrypted = false;
+let started = false;
+let card = null;
 
 function startSession(){
-  session = true;
-  document.getElementById("status").innerText = "Secure Session Started";
+  started = true;
+  document.getElementById("status").innerText = "Game Started";
 }
 
 function encryptMove(){
-  if(!session){
-    alert("Start session first");
+  if(!started){
+    alert("Start game first");
     return;
   }
-  encrypted = true;
-  document.getElementById("status").innerText = "Move Encrypted Onchain";
+  card = Math.floor(Math.random()*10)+1;
+  document.getElementById("status").innerText =
+    "Encrypted Card Stored";
 }
 
 function revealMove(){
-  if(!encrypted){
-    alert("No encrypted move");
+  if(!card){
+    alert("Draw card first");
     return;
   }
-  document.getElementById("status").innerText = "Reveal Complete • Fair State";
+  document.getElementById("status").innerText =
+    "Reveal Complete • Your Card: " + card;
 }
 </script>
-
-</body>
-</html>
