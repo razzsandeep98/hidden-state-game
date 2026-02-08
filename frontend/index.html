@@ -2,87 +2,80 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hidden State Game</title>
+<title>Encrypted Game Portal</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white min-h-screen flex items-center justify-center">
+<body class="bg-black text-white min-h-screen">
 
-<div class="bg-gray-900 border border-gray-700 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
-
-<h1 class="text-3xl font-bold mb-2">Hidden State Game</h1>
-<p class="text-gray-400 mb-6 text-sm">Encrypted Card • Private Moves • Fair Reveal</p>
-
-<div class="bg-gray-800 p-4 rounded-xl mb-4">
-<p class="text-gray-500 text-xs mb-1">Encrypted State</p>
-<p id="cipherText" class="break-all text-green-400 text-sm">None</p>
+<!-- NAVBAR -->
+<div class="flex justify-between items-center px-8 py-6">
+  <h1 class="text-xl font-semibold tracking-widest">HIDDEN PORTAL</h1>
+  <p class="text-gray-500 text-sm">Solana + Arcium</p>
 </div>
 
-<button onclick="joinRoom()" 
-class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg w-full mb-3">
-Join Game Room
-</button>
+<!-- HERO -->
+<div class="flex flex-col items-center text-center mt-20 px-4">
+  <h2 class="text-5xl md:text-6xl font-bold leading-tight">
+    Encrypt Everything <br>
+    Compute Privately
+  </h2>
 
-<button onclick="drawCard()" 
-class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg w-full mb-3">
-Draw Encrypted Card
-</button>
+  <p class="text-gray-400 mt-6 max-w-xl">
+    A hidden-state onchain gaming portal powered by encrypted compute.
+    Player actions remain private until reveal phase.
+  </p>
 
-<button onclick="revealCard()" 
-class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg w-full">
-Reveal Card
-</button>
+  <div class="flex gap-4 mt-8">
+    <button onclick="startSession()"
+      class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg">
+      Start Secure Session
+    </button>
 
-<div class="mt-6 text-sm text-gray-400">
-<p id="status">Waiting for player...</p>
+    <button onclick="encryptMove()"
+      class="border border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-800">
+      Encrypt Move
+    </button>
+  </div>
 </div>
 
+<!-- STATUS BOX -->
+<div class="mt-20 flex justify-center">
+  <div class="bg-gray-900 border border-gray-700 p-6 rounded-xl w-96 text-center">
+    <p class="text-gray-500 text-sm">Session Status</p>
+    <p id="status" class="mt-2 text-green-400">Idle</p>
+
+    <button onclick="revealMove()"
+      class="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg w-full">
+      Reveal Move
+    </button>
+  </div>
 </div>
 
 <script>
-let encrypted = null;
-let actualCard = null;
-let joined = false;
+let session = false;
+let encrypted = false;
 
-function joinRoom(){
-  joined = true;
-  document.getElementById("status").innerText = "Player Joined • Secure Session Started";
+function startSession(){
+  session = true;
+  document.getElementById("status").innerText = "Secure Session Started";
 }
 
-function fakeEncrypt(data){
-  return btoa(data + "|arcium_encrypted_state");
-}
-
-function fakeDecrypt(str){
-  return atob(str).split("|")[0];
-}
-
-function drawCard(){
-  if(!joined){
-    alert("Join room first");
+function encryptMove(){
+  if(!session){
+    alert("Start session first");
     return;
   }
-
-  actualCard = Math.floor(Math.random()*52)+1;
-  encrypted = fakeEncrypt(actualCard);
-
-  document.getElementById("cipherText").innerText =
-    encrypted.substring(0,25) + "...";
-
-  document.getElementById("status").innerText =
-    "Encrypted Move Stored Onchain";
+  encrypted = true;
+  document.getElementById("status").innerText = "Move Encrypted Onchain";
 }
 
-function revealCard(){
+function revealMove(){
   if(!encrypted){
-    alert("No card drawn");
+    alert("No encrypted move");
     return;
   }
-
-  const card = fakeDecrypt(encrypted);
-
-  document.getElementById("status").innerText =
-    "Reveal Phase Complete • Card Number: " + card;
+  document.getElementById("status").innerText = "Reveal Complete • Fair State";
 }
 </script>
 
