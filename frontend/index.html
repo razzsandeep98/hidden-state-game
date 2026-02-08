@@ -75,7 +75,7 @@ Start
 Shuffle
 </button>
 
-<button onclick="revealCard()" class="bg-green-600 px-5 py-2 rounded">
+<button id="revealBtn" onclick="revealCard()" class="bg-green-600 px-5 py-2 rounded">
 Reveal
 </button>
 </div>
@@ -103,10 +103,8 @@ let playerScore = 0;
 let botScore = 0;
 
 const card = document.getElementById("card");
-
-function scrollToGame(){
-  document.getElementById("game").scrollIntoView({behavior:"smooth"});
-}
+const status = document.getElementById("status");
+const revealBtn = document.getElementById("revealBtn");
 
 function startGame(){
   started = true;
@@ -114,40 +112,41 @@ function startGame(){
   playerCard = null;
   botCard = null;
   card.innerText = "?";
-  document.getElementById("status").innerText = "Round Started";
+  status.innerText = "Round Started";
+  revealBtn.innerText = "Reveal";
 }
 
 function drawCard(){
   if(!started){
-    alert("Start game first");
+    status.innerText = "Click Start First";
     return;
   }
 
   if(roundFinished){
-    alert("Click Start for next round");
+    status.innerText = "Click Next Round";
     return;
   }
 
   card.classList.add("shuffle");
-  document.getElementById("status").innerText = "Shuffling Encrypted Cards...";
+  status.innerText = "Shuffling...";
 
   setTimeout(()=>{
     card.classList.remove("shuffle");
     playerCard = Math.floor(Math.random()*13)+1;
     botCard = Math.floor(Math.random()*13)+1;
     card.innerText = "🔒";
-    document.getElementById("status").innerText = "Cards Encrypted";
+    status.innerText = "Cards Encrypted";
   },1200);
 }
 
 function revealCard(){
-  if(!playerCard){
-    alert("Shuffle first");
+  if(roundFinished){
+    startGame();
     return;
   }
 
-  if(roundFinished){
-    alert("Round already finished");
+  if(!playerCard){
+    status.innerText = "Shuffle Cards First";
     return;
   }
 
@@ -165,11 +164,9 @@ function revealCard(){
   }
 
   card.innerText = playerCard;
+  status.innerText =
+    result + " | Score " + playerScore + "-" + botScore;
 
-  document.getElementById("status").innerText =
-    result + " | Your:" + playerCard +
-    " Bot:" + botCard +
-    " | Score " + playerScore + "-" + botScore +
-    " | Click Start for next round";
+  revealBtn.innerText = "Next Round";
 }
 </script>
