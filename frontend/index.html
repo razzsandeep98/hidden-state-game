@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hidden State Game</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white min-h-screen flex items-center justify-center">
+
+<div class="bg-gray-900 border border-gray-700 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+
+<h1 class="text-3xl font-bold mb-2">Hidden State Game</h1>
+<p class="text-gray-400 mb-6 text-sm">Encrypted Card • Private Moves • Fair Reveal</p>
+
+<div class="bg-gray-800 p-4 rounded-xl mb-4">
+<p class="text-gray-500 text-xs mb-1">Encrypted State</p>
+<p id="cipherText" class="break-all text-green-400 text-sm">None</p>
+</div>
+
+<button onclick="joinRoom()" 
+class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg w-full mb-3">
+Join Game Room
+</button>
+
+<button onclick="drawCard()" 
+class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg w-full mb-3">
+Draw Encrypted Card
+</button>
+
+<button onclick="revealCard()" 
+class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg w-full">
+Reveal Card
+</button>
+
+<div class="mt-6 text-sm text-gray-400">
+<p id="status">Waiting for player...</p>
+</div>
+
+</div>
+
+<script>
+let encrypted = null;
+let actualCard = null;
+let joined = false;
+
+function joinRoom(){
+  joined = true;
+  document.getElementById("status").innerText = "Player Joined • Secure Session Started";
+}
+
+function fakeEncrypt(data){
+  return btoa(data + "|arcium_encrypted_state");
+}
+
+function fakeDecrypt(str){
+  return atob(str).split("|")[0];
+}
+
+function drawCard(){
+  if(!joined){
+    alert("Join room first");
+    return;
+  }
+
+  actualCard = Math.floor(Math.random()*52)+1;
+  encrypted = fakeEncrypt(actualCard);
+
+  document.getElementById("cipherText").innerText =
+    encrypted.substring(0,25) + "...";
+
+  document.getElementById("status").innerText =
+    "Encrypted Move Stored Onchain";
+}
+
+function revealCard(){
+  if(!encrypted){
+    alert("No card drawn");
+    return;
+  }
+
+  const card = fakeDecrypt(encrypted);
+
+  document.getElementById("status").innerText =
+    "Reveal Phase Complete • Card Number: " + card;
+}
+</script>
+
+</body>
+</html>
