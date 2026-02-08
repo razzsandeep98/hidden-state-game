@@ -111,7 +111,7 @@ function startGame(){
   playerCard=null;
   botCard=null;
   card.innerText="?";
-  status.innerText="Round Started";
+  status.innerText="New Round Started";
   revealBtn.innerText="Reveal";
 }
 
@@ -121,12 +121,12 @@ function drawCard(){
     return;
   }
   if(roundFinished){
-    status.innerText="Click Next Round";
+    status.innerText="Click Start For Next Round";
     return;
   }
 
   card.classList.add("shuffle");
-  status.innerText="Shuffling Encrypted Cards...";
+  status.innerText="Shuffling...";
 
   setTimeout(()=>{
     card.classList.remove("shuffle");
@@ -138,12 +138,13 @@ function drawCard(){
 }
 
 function revealCard(){
-  if(roundFinished){
-    startGame();
-    return;
-  }
   if(!playerCard){
     status.innerText="Shuffle First";
+    return;
+  }
+
+  if(roundFinished){
+    status.innerText="Click Start To Play Again";
     return;
   }
 
@@ -166,12 +167,10 @@ function revealCard(){
     result +
     " | Your Card: " + playerCard +
     " | Bot Card: " + botCard +
-    " | You score: " + playerScore +
-    " | Bot score: " + botScore;
+    " | You: " + playerScore +
+    " | Bot: " + botScore;
 
-  revealBtn.innerText="Next Round";
+  revealBtn.innerText="Round Finished";
 }
 </script>
 
-</body>
-</html>
